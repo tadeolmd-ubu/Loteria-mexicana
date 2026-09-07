@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Proyecto nativo generado por prebuild
+AppLoteria/android/
+AppLoteria/ios/
+
+# Firma de release (nunca subir)
+AppLoteria/keystore/
+AppLoteria/android/keystore.properties
+*.jks
+*.keystore
+
+# Logs y temporales
+npm-debug.*
+.DS_Store
+*.log

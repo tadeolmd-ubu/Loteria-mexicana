@@ -1,0 +1,16 @@
+export const colores = {
+  fondo: '#0A3428',
+  fondoSuave: '#0E4534',
+  tarjetaFondo: '#F7EFD8',
+  crema: '#F7EFD8',
+  verde: '#1E8449',
+  verdeClaro: '#2FA366',
+  rojo: '#B8172E',
+  rojoFuerte: '#8E0E22',
+  naranja: '#E67E22',
+  amarillo: '#F1C40F',
+  textoClaro: '#F7EFD8',
+  textoOscuro: '#3A2A12',
+  grisOscuro: '#1B5E3E',
+  bordeCarta: '#C49A2D',
+};
