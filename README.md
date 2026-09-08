@@ -11,7 +11,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 - **54 cartas clásicas** (El Gallo, El Diablito, La Dama, el Catrín…) con las
   **imágenes tradicionales** de la baraja (arte clásico de dominio público).
-- **Deshacer/Reniciar**: botones grandes justo bajo el nombre de la carta; al deshacer el juego
+- **Retroceder/Reniciar**: botones grandes al fondo; al retroceder una carta el juego
   vuelve al modo automático y sigue cantando las cartas que faltan.
 - **Interfaz Material 3**: fondo crema, acentos rojo óxido, verde botella y dorado;
   carrusel de cartas cantadas, carta actual grande centrada con animación suave,
@@ -21,10 +21,10 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 - **Voz del cantador** en cada carta (expo-speech, TTS offline del teléfono).
 - **Frase de inicio**: al comenzar una partida nueva el cantador dice
   *«¡Corre y se va con…!»* y ahí mismo sale la primera carta.
-- **Modo automático**: pulsa *Sacar* y canta las 54 cartas con velocidad ajustable
+- **Modo automático**: pulsa *Empezar* y canta las 54 cartas con velocidad ajustable
   (muy lenta a muy rápida, 6 niveles) mediante un deslizador (el control responde al instante).
-- **Pausa, avance manual y deshacer**: pausa en cualquier momento, avanza una por una
-  con *Siguiente carta* (con voz también) o deshace la última carta cantada.
+- **Pausa, avance manual y retroceder**: pausa en cualquier momento, avanza una por una
+  con *Siguiente carta* (con voz también) o retrocede la última carta cantada.
 - **Barajear**: re-baraja toda la baraja (Fisher-Yates) y comienza una partida nueva.
 - **Historial** de cartas ya cantadas (fila horizontal deslizable) y contador de
   cartas restantes.
@@ -35,7 +35,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.3.4.apk`](./Loteria-Mexicana-v1.3.4.apk) (Android 7.0+, ~71 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.3.5.apk`](./Loteria-Mexicana-v1.3.5.apk) (Android 7.0+, ~71 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo

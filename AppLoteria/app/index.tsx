@@ -1,9 +1,10 @@
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import BarraProgreso from '@/src/components/barra-progreso';
 import ControlVelocidad from '@/src/components/control-velocidad';
 import Historial from '@/src/components/historial';
 import TarjetaGrande from '@/src/components/tarjeta-grande';
-import { useGame } from '@/src/hooks/use-game';
+import { useGame, VELOCIDADES } from '@/src/hooks/use-game';
 import { colores } from '@/src/theme';
 
 export default function PantallaJuego() {
@@ -15,13 +16,14 @@ export default function PantallaJuego() {
     const alto = height - insets.top - insets.bottom;
     const fijos =
       12 + // padding vertical
-      60 + // 6 gaps de 10
+      70 + // 7 gaps de 10
       40 + // cabecera
       92 + // carrusel
       52 + // botón pausa (grande)
       52 + // botón siguiente carta (grande)
+      10 + // barra de progreso
       40 + // velocidad
-      58 + // botones deshacer / reiniciar
+      58 + // botones retroceder / reiniciar
       76 + // placa del nombre + posición bajo la carta
       (juego.restantes === 0 ? 44 : 0); // gap + banner de fin
     const disponible = alto - fijos;
@@ -38,6 +40,7 @@ export default function PantallaJuego() {
   }
 
   const terminadas = juego.restantes === 0;
+  const sinEmpezar = juego.cantadas === 0 && !juego.jugando;
 
   const confirmarReiniciar = () => {
     Alert.alert('¿Reiniciar?', 'Empieza una partida nueva y se borra el historial.', [
@@ -47,17 +50,14 @@ export default function PantallaJuego() {
   };
 
   const manejarSiguiente = () => {
-    if (juego.cantadas === 0 && !juego.jugando) {
-      juego.iniciar();
-      return;
-    }
+    if (juego.cantadas === 0 && !juego.jugando) return;
     juego.siguiente();
   };
 
   const controlAuto = juego.jugando
     ? { texto: '⏸  Pausa', onPress: juego.pausar }
     : {
-        texto: juego.cantadas === 0 ? '▶  Sacar' : '▶  Continuar',
+        texto: juego.cantadas === 0 ? '▶  Empezar' : '▶  Continuar',
         onPress: juego.iniciar,
       };
 
@@ -95,12 +95,18 @@ export default function PantallaJuego() {
         </Pressable>
 
         <Pressable
-          style={[styles.botonSiguiente, juego.restantes === 0 && styles.botonOpaco]}
+          style={[styles.botonSiguiente, (terminadas || sinEmpezar) && styles.botonOpaco]}
           onPress={manejarSiguiente}
-          disabled={juego.restantes === 0}
+          disabled={terminadas || sinEmpezar}
         >
           <Text style={styles.botonSiguienteTexto}>Siguiente carta  →</Text>
         </Pressable>
+
+        <BarraProgreso
+          ms={VELOCIDADES[juego.indiceVelocidad].ms}
+          activa={juego.jugando}
+          clave={juego.cantadas}
+        />
 
         <ControlVelocidad indice={juego.indiceVelocidad} onChange={juego.setVelocidad} />
 
@@ -110,7 +116,7 @@ export default function PantallaJuego() {
             onPress={juego.deshacer}
             disabled={juego.cantadas === 0}
           >
-            <Text style={styles.botonGrandeTexto}>↶  Deshacer</Text>
+            <Text style={styles.botonGrandeTexto}>↶  Retroceder</Text>
           </Pressable>
           <Pressable style={styles.botonGrande} onPress={confirmarReiniciar}>
             <Text style={styles.botonGrandeTexto}>↻  Reiniciar</Text>
@@ -187,7 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   botonOpaco: {
-    opacity: 0.45,
+    opacity: 0.4,
   },
   botonPausa: {
     backgroundColor: colores.verde,

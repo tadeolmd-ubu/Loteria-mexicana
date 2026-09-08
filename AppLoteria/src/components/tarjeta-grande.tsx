@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Image, StyleSheet, Text, View } from 'react-native';
+import { Animated, Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Carta } from '@/src/data/cartas';
 import { colores } from '@/src/theme';
 
@@ -11,6 +11,7 @@ interface Props {
 }
 
 export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: Props) {
+  const { width: anchoPantalla } = useWindowDimensions();
   const opacidad = useRef(new Animated.Value(1)).current;
   const escala = useRef(new Animated.Value(1)).current;
   const cartaAnterior = useRef<string | null>(carta?.id ?? null);
@@ -27,9 +28,11 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
   }, [carta?.id, opacidad, escala]);
 
   if (!carta) {
+    const anchoVacio = Math.min(tamano * 1.2, anchoPantalla - 24);
+    const altoVacio = Math.round((anchoVacio * 373) / 669);
     return (
       <View style={styles.contenedor}>
-        <View style={[styles.vacio, { width: tamano, height: tamano }]}>
+        <View style={[styles.vacio, { width: anchoVacio, height: altoVacio }]}>
           <Image
             source={require('../../assets/images/primer-carta.png')}
             style={styles.imagen}

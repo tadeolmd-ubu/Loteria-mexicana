@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Slider from '@react-native-community/slider';
 import { StyleSheet, Text, View } from 'react-native';
 import { VELOCIDADES } from '@/src/hooks/use-game';
@@ -10,29 +10,21 @@ interface Props {
 }
 
 export default function ControlVelocidad({ indice, onChange }: Props) {
-  const [valor, setValor] = useState(indice);
-  const [arrastrando, setArrastrando] = useState(false);
+  const [activa, setActiva] = useState(indice);
 
-  useEffect(() => {
-    if (!arrastrando) setValor(indice);
-  }, [indice, arrastrando]);
+  const marcar = (v: number) => setActiva(Math.round(v));
 
   return (
     <View style={styles.contenedor}>
       <Slider
+        key={indice}
         style={styles.slider}
         minimumValue={0}
         maximumValue={VELOCIDADES.length - 1}
         step={1}
-        value={valor}
-        onSlidingStart={() => setArrastrando(true)}
-        onValueChange={(v) => setValor(Math.round(v))}
-        onSlidingComplete={(v) => {
-          const entero = Math.round(v);
-          setValor(entero);
-          setArrastrando(false);
-          onChange(entero);
-        }}
+        value={indice}
+        onValueChange={marcar}
+        onSlidingComplete={(v) => onChange(Math.round(v))}
         minimumTrackTintColor={colores.rojo}
         maximumTrackTintColor={colores.grisClaro}
         thumbTintColor={colores.verde}
@@ -41,8 +33,11 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
         {VELOCIDADES.map((v, i) => (
           <Text
             key={v.clave}
-            style={[styles.marca, i === valor && styles.marcaActiva]}
-            onPress={() => onChange(i)}
+            style={[styles.marca, i === activa && styles.marcaActiva]}
+            onPress={() => {
+              marcar(i);
+              onChange(i);
+            }}
           >
             {v.etiqueta}
           </Text>

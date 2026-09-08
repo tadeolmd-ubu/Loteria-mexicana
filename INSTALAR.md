@@ -15,7 +15,7 @@
 El archivo a instalar es:
 
 ```
-Loteria-Mexicana-v1.3.4.apk
+Loteria-Mexicana-v1.3.5.apk
 ```
 
 Puedes pasarlo de cualquiera de estas formas:
@@ -88,12 +88,13 @@ elegir "Actualizar".
 
 ## Qué hace la app (recordatorio)
 
-- **Sacar**: canta las 54 cartas en automático, cada una con su voz y un sonido
+- **Empezar**: canta las 54 cartas en automático, cada una con su voz y un sonido
   de carta. Al empezar una partida nueva dice *«¡Corre y se va con…!»*.
 - **Pausa / Siguiente**: pausa cuando quieras (suena un tono) y avanza una por una
-  con voz.
-- **Barajear**: baraja todo y empieza una partida nueva desde cero.
-- La velocidad se ajusta con el deslizador: lenta / media / rápida.
+  con voz. Una barra muestra cuánto falta para que salga la siguiente carta.
+- **Retroceder / Reiniciar**: devuelve la última carta cantada a la baraja (y el
+  juego reanuda el canto automático) o empieza una partida nueva desde cero.
+- La velocidad se ajusta con el deslizador: 6 niveles de muy lenta a muy rápida.
 - La app no pide ningún permiso (ni siquiera micrófono): los sonidos y las
   imágenes van dentro del propio `.apk`.
 - Si cierras la app, la siguiente vez **continúa donde ibas** (cartas restantes,
