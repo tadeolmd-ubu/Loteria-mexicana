@@ -7,9 +7,10 @@ interface Props {
   carta: Carta | null;
   total: number;
   cantadas: number;
+  tamano?: number;
 }
 
-export default function TarjetaGrande({ carta, total, cantadas }: Props) {
+export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: Props) {
   const opacidad = useRef(new Animated.Value(1)).current;
   const escala = useRef(new Animated.Value(1)).current;
   const cartaAnterior = useRef<string | null>(carta?.id ?? null);
@@ -28,7 +29,7 @@ export default function TarjetaGrande({ carta, total, cantadas }: Props) {
   if (!carta) {
     return (
       <View style={styles.contenedor}>
-        <View style={[styles.marco, styles.vacio]}>
+        <View style={[styles.marco, styles.vacio, { width: tamano, height: tamano }]}>
           <Text style={styles.emojiVacio}>🃏</Text>
           <Text style={styles.textoVacio}>¡Lotería!</Text>
           <Text style={styles.subVacio}>
@@ -42,7 +43,12 @@ export default function TarjetaGrande({ carta, total, cantadas }: Props) {
 
   return (
     <View style={styles.contenedor}>
-      <Animated.View style={[styles.marco, { opacity: opacidad, transform: [{ scale: escala }] }]}>
+      <Animated.View
+        style={[
+          styles.marco,
+          { width: tamano, height: tamano, opacity: opacidad, transform: [{ scale: escala }] },
+        ]}
+      >
         <Image source={carta.imagen} style={styles.imagen} resizeMode="contain" />
       </Animated.View>
       <View style={styles.nombreCaja}>
@@ -61,17 +67,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   marco: {
-    width: 300,
-    height: 318,
-    borderRadius: 44,
+    borderRadius: 32,
     backgroundColor: colores.tarjetaFondo,
-    borderWidth: 5,
+    borderWidth: 4,
     borderColor: colores.bordeCarta,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.18,
-    shadowRadius: 16,
-    elevation: 12,
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.16,
+    shadowRadius: 12,
+    elevation: 9,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -85,42 +89,42 @@ const styles = StyleSheet.create({
     borderColor: colores.bordeCarta,
   },
   emojiVacio: {
-    fontSize: 72,
+    fontSize: 46,
   },
   textoVacio: {
     color: colores.verde,
-    fontSize: 32,
+    fontSize: 22,
     fontWeight: '800',
-    marginTop: 12,
+    marginTop: 8,
   },
   subVacio: {
     color: colores.grisOscuro,
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'center',
-    marginTop: 8,
-    lineHeight: 20,
+    marginTop: 6,
+    lineHeight: 17,
   },
   nombreCaja: {
-    marginTop: 18,
+    marginTop: 12,
     backgroundColor: colores.rojo,
-    borderRadius: 14,
-    paddingHorizontal: 26,
-    paddingVertical: 9,
+    borderRadius: 13,
+    paddingHorizontal: 22,
+    paddingVertical: 7,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.22,
+    shadowRadius: 5,
+    elevation: 5,
   },
   nombre: {
     color: colores.textoClaro,
-    fontSize: 34,
+    fontSize: 26,
     fontWeight: '800',
     textAlign: 'center',
   },
   posicion: {
-    marginTop: 10,
+    marginTop: 7,
     color: colores.grisOscuro,
-    fontSize: 14,
+    fontSize: 12,
   },
 });

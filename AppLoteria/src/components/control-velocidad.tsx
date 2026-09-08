@@ -24,7 +24,6 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
 
   return (
     <View style={styles.contenedor}>
-      <Text style={styles.etiqueta}>Velocidad del cantador</Text>
       <Slider
         style={styles.slider}
         minimumValue={0}
@@ -54,30 +53,23 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
 const styles = StyleSheet.create({
   contenedor: {
     width: '100%',
-    paddingHorizontal: 8,
-  },
-  etiqueta: {
-    color: colores.textoOscuro,
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-    opacity: 0.75,
+    maxHeight: 40,
   },
   slider: {
     width: '100%',
-    height: 36,
+    height: 24,
   },
   marcas: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
+    paddingHorizontal: 14,
   },
   marca: {
     color: colores.textoOscuro,
-    fontSize: 14,
+    fontSize: 12,
     opacity: 0.55,
     fontWeight: '600',
-    paddingVertical: 4,
+    paddingVertical: 0,
   },
   marcaActiva: {
     opacity: 1,

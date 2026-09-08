@@ -14,6 +14,8 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 - **Interfaz Material 3**: fondo crema, acentos rojo óxido, verde botella y dorado;
   carrusel de cartas cantadas, carta actual grande centrada con animación suave,
   velocidad del narrador con deslizador y botón flotante *Siguiente carta*.
+  Todo cabe en una sola pantalla (sin scroll), con la carta que se ajusta al
+  tamaño de la pantalla del teléfono.
 - **Voz del cantador** en cada carta (expo-speech, TTS offline del teléfono).
 - **Frase de inicio**: al comenzar una partida nueva el cantador dice
   *«¡Corre y se va con…!»* y ahí mismo sale la primera carta.
@@ -31,7 +33,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.3.0.apk`](./Loteria-Mexicana-v1.3.0.apk) (Android 7.0+, ~71 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.3.1.apk`](./Loteria-Mexicana-v1.3.1.apk) (Android 7.0+, ~71 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo
