@@ -12,7 +12,7 @@ export default function PantallaJuego() {
   if (!juego.cargado) {
     return (
       <View style={styles.cargando}>
-        <ActivityIndicator size="large" color={colores.amarillo} />
+        <ActivityIndicator size="large" color={colores.verde} />
         <Text style={styles.textoCargando}>Cargando partida…</Text>
       </View>
     );
@@ -20,57 +20,83 @@ export default function PantallaJuego() {
 
   const terminadas = juego.restantes === 0;
 
-  const confirmarBarajear = () => {
-    Alert.alert('¿Barajear?', 'Empieza una partida nueva y se borra el historial.', [
-      { text: 'No', style: 'cancel' },
-      { text: 'Sí', style: 'destructive', onPress: juego.barajear },
+  const confirmarReiniciar = () => {
+    Alert.alert('¿Reiniciar?', 'Empieza una partida nueva y se borra el historial.', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Reiniciar', style: 'destructive', onPress: juego.barajear },
     ]);
   };
+
+  const manejarSiguiente = () => {
+    if (juego.cantadas === 0 && !juego.jugando) {
+      juego.iniciar();
+      return;
+    }
+    juego.siguiente();
+  };
+
+  const controlAuto = juego.jugando
+    ? { texto: '⏸  Pausa', onPress: juego.pausar }
+    : {
+        texto: juego.cantadas === 0 ? '▶  Sacar' : '▶  Continuar',
+        onPress: juego.iniciar,
+      };
 
   return (
     <SafeAreaView style={styles.fondo} edges={['top', 'bottom']}>
       <ScrollView contentContainerStyle={styles.contenido} showsVerticalScrollIndicator={false}>
-        <View style={styles.tituloCaja}>
-          <Text style={styles.titulo}>LOTERÍA</Text>
-          <Text style={styles.subtitulo}>Cantador mexicano</Text>
+        <View style={styles.cabecera}>
+          <View style={styles.cabeceraCaja}>
+            <Text style={styles.kicker}>L O T E R Í A   M E X I C A N A</Text>
+            <Text style={styles.titulo}>Contador de Lotería</Text>
+          </View>
+          <View style={styles.chipRestantes}>
+            <Text style={styles.chipTexto}>
+              Quedan {juego.restantes} carta{juego.restantes === 1 ? '' : 's'}
+            </Text>
+          </View>
         </View>
 
         <Historial historial={juego.historial} restantes={juego.restantes} />
 
-        <TarjetaGrande carta={juego.cartaActual} total={juego.total} cantadas={juego.cantadas} />
-
-        <View style={styles.controles}>
-          {juego.jugando ? (
-            <Pressable style={styles.botonPrincipal} onPress={juego.pausar}>
-              <Text style={styles.botonTexto}>⏸  Pausa</Text>
-            </Pressable>
-          ) : (
-            <Pressable
-              style={styles.botonPrincipal}
-              onPress={juego.iniciar}
-              disabled={juego.restantes === 0}
-            >
-              <Text style={styles.botonTexto}>
-                {juego.cantadas === 0 ? '▶  Sacar' : '▶  Continuar'}
-              </Text>
-            </Pressable>
-          )}
-
-          <View style={styles.filaSecundaria}>
-            <Pressable
-              style={styles.botonSecundario}
-              onPress={juego.siguiente}
-              disabled={juego.restantes === 0}
-            >
-              <Text style={styles.botonSecundarioTexto}>Siguiente +</Text>
-            </Pressable>
-            <Pressable style={styles.botonSecundario} onPress={confirmarBarajear}>
-              <Text style={styles.botonSecundarioTexto}>♻  Barajear</Text>
-            </Pressable>
-          </View>
-        </View>
+        <TarjetaGrande
+          carta={juego.cartaActual}
+          total={juego.total}
+          cantadas={juego.cantadas}
+        />
 
         <ControlVelocidad indice={juego.indiceVelocidad} onChange={juego.setVelocidad} />
+
+        <View style={styles.controlAutoCaja}>
+          <Pressable
+            style={styles.botonAuto}
+            onPress={controlAuto.onPress}
+            disabled={juego.restantes === 0 && !juego.jugando}
+          >
+            <Text style={styles.botonAutoTexto}>{controlAuto.texto}</Text>
+          </Pressable>
+        </View>
+
+        <Pressable
+          style={[styles.botonFlotante, juego.restantes === 0 && styles.botonOpaco]}
+          onPress={manejarSiguiente}
+          disabled={juego.restantes === 0}
+        >
+          <Text style={styles.botonFlotanteTexto}>Siguiente carta  →</Text>
+        </Pressable>
+
+        <View style={styles.filaAcciones}>
+          <Pressable
+            style={[styles.botonAccion, juego.cantadas === 0 && styles.botonOpaco]}
+            onPress={juego.deshacer}
+            disabled={juego.cantadas === 0}
+          >
+            <Text style={styles.botonAccionTexto}>↶  Deshacer</Text>
+          </Pressable>
+          <Pressable style={styles.botonAccion} onPress={confirmarReiniciar}>
+            <Text style={styles.botonAccionTexto}>↻  Reiniciar</Text>
+          </Pressable>
+        </View>
 
         {terminadas && (
           <View style={styles.finBanner}>
@@ -91,7 +117,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   textoCargando: {
-    color: colores.crema,
+    color: colores.textoOscuro,
     fontSize: 16,
   },
   fondo: {
@@ -99,83 +125,117 @@ const styles = StyleSheet.create({
     backgroundColor: colores.fondo,
   },
   contenido: {
-    padding: 16,
-    paddingBottom: 40,
-    alignItems: 'center',
+    padding: 20,
+    paddingBottom: 44,
     gap: 18,
   },
-  tituloCaja: {
-    alignItems: 'center',
+  cabecera: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  cabeceraCaja: {
+    flex: 1,
+  },
+  kicker: {
+    color: colores.bordeCarta,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.6,
   },
   titulo: {
-    color: colores.amarillo,
-    fontSize: 38,
+    color: colores.verde,
+    fontSize: 30,
     fontWeight: '900',
-    letterSpacing: 6,
-  },
-  subtitulo: {
-    color: colores.crema,
-    fontSize: 15,
-    opacity: 0.85,
     marginTop: 2,
   },
-  controles: {
-    width: '100%',
-    alignItems: 'center',
-    gap: 10,
-  },
-  botonPrincipal: {
-    width: '100%',
-    backgroundColor: colores.rojo,
-    borderRadius: 16,
-    paddingVertical: 16,
-    borderWidth: 2,
-    borderColor: colores.amarillo,
-    alignItems: 'center',
+  chipRestantes: {
+    backgroundColor: colores.amarillo,
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  botonTexto: {
-    color: colores.crema,
-    fontSize: 24,
+  chipTexto: {
+    color: colores.rojoFuerte,
+    fontSize: 14,
     fontWeight: '800',
   },
-  filaSecundaria: {
-    flexDirection: 'row',
-    gap: 10,
-    width: '100%',
+  controlAutoCaja: {
+    alignItems: 'center',
   },
-  botonSecundario: {
-    flex: 1,
+  botonAuto: {
     backgroundColor: colores.fondoSuave,
     borderRadius: 14,
+    paddingHorizontal: 26,
+    paddingVertical: 10,
+    borderWidth: 2,
+    borderColor: colores.verdeClaro,
+    alignItems: 'center',
+  },
+  botonAutoTexto: {
+    color: colores.verde,
+    fontSize: 16,
+    fontWeight: '800',
+  },
+  botonFlotante: {
+    backgroundColor: colores.rojo,
+    borderRadius: 34,
+    paddingVertical: 20,
+    alignItems: 'center',
+    borderWidth: 4,
+    borderColor: colores.amarillo,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  botonFlotanteTexto: {
+    color: colores.textoClaro,
+    fontSize: 22,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
+  botonOpaco: {
+    opacity: 0.45,
+  },
+  filaAcciones: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  botonAccion: {
+    flex: 1,
+    backgroundColor: colores.tarjetaFondo,
+    borderRadius: 16,
     paddingVertical: 14,
     borderWidth: 2,
     borderColor: colores.verdeClaro,
     alignItems: 'center',
   },
-  botonSecundarioTexto: {
-    color: colores.crema,
+  botonAccionTexto: {
+    color: colores.verde,
     fontSize: 16,
-    fontWeight: '700',
-  },
-  botonOpaco: {
-    opacity: 0.45,
+    fontWeight: '800',
   },
   finBanner: {
-    width: '100%',
     backgroundColor: colores.verde,
-    borderRadius: 12,
-    paddingVertical: 10,
-    borderWidth: 2,
-    borderColor: colores.amarillo,
+    borderRadius: 14,
+    paddingVertical: 12,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   finTexto: {
-    color: colores.crema,
+    color: colores.textoClaro,
     fontSize: 16,
     fontWeight: '800',
   },

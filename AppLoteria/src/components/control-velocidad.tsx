@@ -32,9 +32,9 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
         step={1}
         value={valor}
         onValueChange={manejarCambio}
-        minimumTrackTintColor={colores.amarillo}
-        maximumTrackTintColor={colores.fondoSuave}
-        thumbTintColor={colores.rojo}
+        minimumTrackTintColor={colores.rojo}
+        maximumTrackTintColor={colores.grisClaro}
+        thumbTintColor={colores.verde}
       />
       <View style={styles.marcas}>
         {VELOCIDADES.map((v, i) => (
@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   etiqueta: {
-    color: colores.crema,
+    color: colores.textoOscuro,
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    opacity: 0.9,
+    opacity: 0.75,
   },
   slider: {
     width: '100%',
@@ -73,15 +73,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   marca: {
-    color: colores.crema,
+    color: colores.textoOscuro,
     fontSize: 14,
-    opacity: 0.6,
+    opacity: 0.55,
     fontWeight: '600',
     paddingVertical: 4,
   },
   marcaActiva: {
     opacity: 1,
-    color: colores.amarillo,
+    color: colores.rojo,
     fontWeight: '800',
   },
 });

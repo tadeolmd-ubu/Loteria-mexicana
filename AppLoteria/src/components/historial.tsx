@@ -21,13 +21,17 @@ export default function Historial({ historial, restantes }: Props) {
   return (
     <View style={styles.contenedor}>
       <View style={styles.encabezado}>
-        <Text style={styles.titulo}>Historial</Text>
-        <Text style={styles.contador}>
-          Faltan {restantes} carta{restantes === 1 ? '' : 's'}
-        </Text>
+        <Text style={styles.titulo}>Cantadas</Text>
+        <View style={styles.contadorCaja}>
+          <Text style={styles.contador}>{historial.length}</Text>
+        </View>
       </View>
       {historial.length === 0 ? (
-        <Text style={styles.vacio}>Todavía no se ha cantado ninguna carta.</Text>
+        <Text style={styles.vacio}>
+          {restantes === 54
+            ? 'Todavía no se ha cantado ninguna carta.'
+            : 'Ninguna carta por ahora.'}
+        </Text>
       ) : (
         <ScrollView
           ref={scrollRef}
@@ -37,8 +41,14 @@ export default function Historial({ historial, restantes }: Props) {
         >
           {historial.map((carta, i) => (
             <View key={carta.id} style={styles.miniaturaCaja}>
-              <Image source={carta.imagen} style={styles.miniatura} resizeMode="contain" />
-              <Text style={styles.miniaturaNum}>{i + 1}</Text>
+              <Image
+                source={carta.imagen}
+                style={styles.miniatura}
+                resizeMode="contain"
+              />
+              <View style={styles.numBadge}>
+                <Text style={styles.miniaturaNum}>{i + 1}</Text>
+              </View>
             </View>
           ))}
         </ScrollView>
@@ -55,48 +65,72 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 10,
   },
   titulo: {
-    color: colores.crema,
-    fontSize: 15,
-    fontWeight: '700',
+    color: colores.verde,
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: 0.3,
+  },
+  contadorCaja: {
+    minWidth: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colores.amarillo,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
   },
   contador: {
-    color: colores.amarillo,
-    fontSize: 15,
-    fontWeight: '700',
+    color: colores.rojoFuerte,
+    fontSize: 17,
+    fontWeight: '900',
   },
   vacio: {
-    color: colores.crema,
-    fontSize: 13,
-    opacity: 0.6,
+    color: colores.grisOscuro,
+    fontSize: 14,
     textAlign: 'center',
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   fila: {
-    paddingRight: 24,
-    gap: 8,
+    paddingRight: 28,
+    gap: 12,
+    paddingBottom: 6,
   },
   miniaturaCaja: {
-    width: 58,
-    height: 66,
-    borderRadius: 10,
-    backgroundColor: colores.crema,
+    width: 76,
+    height: 90,
+    borderRadius: 18,
+    backgroundColor: colores.tarjetaFondo,
     borderWidth: 2,
     borderColor: colores.bordeCarta,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
   },
   miniatura: {
     width: '100%',
     height: '100%',
   },
-  miniaturaNum: {
+  numBadge: {
     position: 'absolute',
-    top: 1,
+    top: 4,
     left: 4,
-    fontSize: 11,
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: colores.rojo,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  miniaturaNum: {
+    fontSize: 12,
     fontWeight: '800',
-    color: colores.rojoFuerte,
+    color: colores.textoClaro,
   },
 });

@@ -11,15 +11,16 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 - **54 cartas clásicas** (El Gallo, El Diablito, La Dama, el Catrín…) con las
   **imágenes tradicionales** de la baraja (arte clásico de dominio público).
+- **Interfaz Material 3**: fondo crema, acentos rojo óxido, verde botella y dorado;
+  carrusel de cartas cantadas, carta actual grande centrada con animación suave,
+  velocidad del narrador con deslizador y botón flotante *Siguiente carta*.
 - **Voz del cantador** en cada carta (expo-speech, TTS offline del teléfono).
 - **Frase de inicio**: al comenzar una partida nueva el cantador dice
   *«¡Corre y se va con…!»* y ahí mismo sale la primera carta.
-- **Efectos de sonido** locales: chasquido al cantar cada carta, tono al pausar,
-  tono al reanudar y ruido de barajado al mezclar.
 - **Modo automático**: pulsa *Sacar* y canta las 54 cartas con velocidad ajustable
   (lenta / media / rápida) mediante un deslizador (el control responde al instante).
-- **Pausa y avance manual**: pausa en cualquier momento y avanza una por una
-  con *Siguiente* (con voz también).
+- **Pausa, avance manual y deshacer**: pausa en cualquier momento, avanza una por una
+  con *Siguiente carta* (con voz también) o deshace la última carta cantada.
 - **Barajear**: re-baraja toda la baraja (Fisher-Yates) y comienza una partida nueva.
 - **Historial** de cartas ya cantadas (fila horizontal deslizable) y contador de
   cartas restantes.
@@ -30,7 +31,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.2.3.apk`](./Loteria-Mexicana-v1.2.3.apk) (Android 7.0+, ~71 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.3.0.apk`](./Loteria-Mexicana-v1.3.0.apk) (Android 7.0+, ~71 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo
@@ -61,7 +62,7 @@ AppLoteria/
 │   ├── hooks/use-game.ts       # Estado del juego, barajado y persistencia
 │   ├── storage/storage.ts      # Guardar/cargar partida (AsyncStorage)
 │   ├── utils/voz.ts            # TTS (expo-speech) con callback al terminar
-│   ├── utils/sonidos.ts        # Efectos de sonido (expo-audio)
+│   ├── utils/sonidos.ts        # Efectos de sonido (desactivados por crash)
 │   ├── components/             # Tarjeta grande, controles, historial
 │   └── theme.ts                # Paleta de colores
 ├── scripts/
@@ -107,7 +108,6 @@ El APK queda en `android/app/build/outputs/apk/release/app-release.apk`.
 | @react-native-async-storage/async-storage | Persistencia de la partida |
 | expo-speech | Voz del cantador (TTS offline) |
 | @react-native-community/slider | Velocidad (lenta/media/rápida) |
-| expo-audio | Efectos de sonido locales (WAV embebidos) |
 | expo-router | Navegación (una pantalla) |
 | Fisher-Yates (implementado a mano) | Barajado sin repeticiones |
 | Gradle local + keystore propio | Compilación y firma del APK |
@@ -124,8 +124,12 @@ El APK queda en `android/app/build/outputs/apk/release/app-release.apk`.
   del espejo público `manny333/loteria-cards`. No incluyen diseños comerciales
   con derechos de autor.
 - Los efectos de sonido se **sintetizan localmente** (`scripts/generar_sonidos.py`,
-  WAV PCM de 44.1 kHz) y van embebidos en el APK; la app no graba audio ni pide el
-  permiso de micrófono.
+  WAV PCM de 44.1 kHz) y quedan listos en `assets/sonidos/`; la app no graba audio
+  ni pide el permiso de micrófono.
+- El sonido quedó **temporalmente desactivado**: `expo-audio` registraba su módulo
+  nativo al abrir la app y en algunos teléfonos la cerraba de inmediato (crash en
+  release). Mientras se decide otra biblioteca (p. ej. `expo-av`), `sonidos.ts`
+  deja las funciones como no-operación para garantizar que la app arranque siempre.
 - La voz depende del motor TTS instalado en el teléfono; la primera vez Android
   puede ofrecer descargar la voz en español (una sola vez, con internet; después
   queda offline).

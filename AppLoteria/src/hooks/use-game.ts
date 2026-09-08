@@ -21,6 +21,7 @@ interface Estado {
 type Accion =
   | { type: 'RESTAURAR'; estado: Estado }
   | { type: 'SACAR' }
+  | { type: 'DESHACER' }
   | { type: 'NUEVA_PARTIDA' }
   | { type: 'SET_VELOCIDAD'; indice: number };
 
@@ -50,6 +51,15 @@ function reducer(estado: Estado, accion: Accion): Estado {
     }
     case 'NUEVA_PARTIDA':
       return { ...estado, cola: barajarFisherYates(), cantadas: [], indiceVelocidad: 1 };
+    case 'DESHACER': {
+      if (estado.cantadas.length === 0) return estado;
+      const [ultima] = estado.cantadas.slice(-1);
+      return {
+        ...estado,
+        cola: [ultima, ...estado.cola],
+        cantadas: estado.cantadas.slice(0, -1),
+      };
+    }
     case 'SET_VELOCIDAD':
       return { ...estado, indiceVelocidad: accion.indice };
     default:
@@ -144,6 +154,12 @@ export function useGame() {
     dispatch({ type: 'SACAR' });
   }, []);
 
+  const deshacer = useCallback(() => {
+    detenerVoz();
+    setJugando(false);
+    dispatch({ type: 'DESHACER' });
+  }, []);
+
   const barajear = useCallback(() => {
     detenerVoz();
     sonidoBarajar();
@@ -182,6 +198,7 @@ export function useGame() {
     iniciar,
     pausar,
     siguiente,
+    deshacer,
     barajear,
     setVelocidad,
   };
