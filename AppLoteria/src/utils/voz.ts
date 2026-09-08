@@ -2,9 +2,19 @@ import * as Speech from 'expo-speech';
 
 let secuencia = 0;
 
-export function hablar(texto: string): void {
+export interface OpcionesHablar {
+  alTerminar?: () => void;
+}
+
+export function hablar(texto: string, opciones: OpcionesHablar = {}): void {
   if (!texto) return;
   const id = ++secuencia;
+  let ejecutado = false;
+  const terminar = () => {
+    if (ejecutado || id !== secuencia) return;
+    ejecutado = true;
+    opciones.alTerminar?.();
+  };
   Speech.stop()
     .catch(() => {})
     .then(() => {
@@ -13,6 +23,9 @@ export function hablar(texto: string): void {
         language: 'es-MX',
         rate: 1.0,
         pitch: 1.0,
+        onDone: terminar,
+        onStopped: terminar,
+        onError: terminar,
       });
     });
 }

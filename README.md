@@ -9,11 +9,15 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Características
 
-- **54 cartas clásicas** con imágenes originales generadas para esta app
-  (sin los diseños comerciales con derechos de autor).
+- **54 cartas clásicas** (El Gallo, El Diablito, La Dama, el Catrín…) con las
+  **imágenes tradicionales** de la baraja (arte clásico de dominio público).
 - **Voz del cantador** en cada carta (expo-speech, TTS offline del teléfono).
+- **Frase de inicio**: al comenzar una partida nueva el cantador dice
+  *«¡Corre y se va con…!»* y ahí mismo sale la primera carta.
+- **Efectos de sonido** locales: chasquido al cantar cada carta, tono al pausar,
+  tono al reanudar y ruido de barajado al mezclar.
 - **Modo automático**: pulsa *Sacar* y canta las 54 cartas con velocidad ajustable
-  (lenta / media / rápida) mediante un deslizador.
+  (lenta / media / rápida) mediante un deslizador (el control responde al instante).
 - **Pausa y avance manual**: pausa en cualquier momento y avanza una por una
   con *Siguiente* (con voz también).
 - **Barajear**: re-baraja toda la baraja (Fisher-Yates) y comienza una partida nueva.
@@ -26,7 +30,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.1.0.apk`](./Loteria-Mexicana-v1.1.0.apk) (Android 7.0+, ~70 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.2.0.apk`](./Loteria-Mexicana-v1.2.0.apk) (Android 7.0+, ~77 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo
@@ -49,17 +53,20 @@ AppLoteria/
 │   ├── _layout.tsx             # Layout raíz
 │   └── index.tsx               # Pantalla del juego
 ├── assets/
-│   ├── cartas/                 # 54 imágenes PNG generadas
+│   ├── cartas/                 # 54 imágenes JPG (arte clásico, dominio público)
+│   ├── sonidos/                # 4 efectos WAV (carta, pausa, reanudar, barajar)
 │   └── images/                 # Iconos de la app
 ├── src/
 │   ├── data/cartas.ts          # Datos de las 54 cartas + imágenes
 │   ├── hooks/use-game.ts       # Estado del juego, barajado y persistencia
 │   ├── storage/storage.ts      # Guardar/cargar partida (AsyncStorage)
-│   ├── utils/voz.ts            # TTS (expo-speech)
+│   ├── utils/voz.ts            # TTS (expo-speech) con callback al terminar
+│   ├── utils/sonidos.ts        # Efectos de sonido (expo-audio)
 │   ├── components/             # Tarjeta grande, controles, historial
 │   └── theme.ts                # Paleta de colores
 ├── scripts/
-│   ├── generar_cartas.py       # Genera las 54 cartas (arte original)
+│   ├── importar_cartas.py      # Descarga y compone las 54 cartas a PNG
+│   ├── generar_sonidos.py      # Sintetiza los WAV (sin librerías externas)
 │   └── generar_iconos.py       # Genera los iconos de la app
 ├── android/                    # Proyecto nativo (generado con prebuild)
 └── keystore/                   # Firma de release (¡no se sube al repo!)
@@ -100,6 +107,7 @@ El APK queda en `android/app/build/outputs/apk/release/app-release.apk`.
 | @react-native-async-storage/async-storage | Persistencia de la partida |
 | expo-speech | Voz del cantador (TTS offline) |
 | @react-native-community/slider | Velocidad (lenta/media/rápida) |
+| expo-audio | Efectos de sonido locales (WAV embebidos) |
 | expo-router | Navegación (una pantalla) |
 | Fisher-Yates (implementado a mano) | Barajado sin repeticiones |
 | Gradle local + keystore propio | Compilación y firma del APK |
@@ -109,8 +117,15 @@ El APK queda en `android/app/build/outputs/apk/release/app-release.apk`.
 - iOS queda fuera por decisión del usuario (no se compila; la app solo apunta a Android).
 - La app no usa la New Architecture (`newArchEnabled: false`) para máxima
   compatibilidad con equipos Android 7.0+.
-- Las imágenes de las 54 cartas son **generadas** (`scripts/generar_cartas.py`),
-  arte original libre; no usan los diseños comerciales de Lotería.
+- Las imágenes de las 54 cartas son la **baraja clásica de Lotería Mexicana,
+  arte de dominio público** (lithografías tradicionales tipo "Don Clemente").
+  Las cartas 1-48 se toman de la carpeta de Google Drive del usuario
+  (`scripts/importar_cartas.py` trae url e id de cada archivo) y las cartas 49-54
+  del espejo público `manny333/loteria-cards`. No incluyen diseños comerciales
+  con derechos de autor.
+- Los efectos de sonido se **sintetizan localmente** (`scripts/generar_sonidos.py`,
+  WAV PCM de 44.1 kHz) y van embebidos en el APK; la app no graba audio ni pide el
+  permiso de micrófono.
 - La voz depende del motor TTS instalado en el teléfono; la primera vez Android
   puede ofrecer descargar la voz en español (una sola vez, con internet; después
   queda offline).

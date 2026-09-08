@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { CARTAS } from '@/src/data/cartas';
 import { cargarPartida, guardarPartida, limpiarPartida } from '@/src/storage/storage';
+import { sonidoBarajar, sonidoCarta, sonidoPausa, sonidoReanudar } from '@/src/utils/sonidos';
 import { detenerVoz, hablar } from '@/src/utils/voz';
 
 export const VELOCIDADES = [
@@ -89,6 +90,7 @@ export function useGame() {
     const crecio = estado.cantadas.length > ultimaLongitud.current;
     ultimaLongitud.current = estado.cantadas.length;
     if (crecio) {
+      sonidoCarta();
       const id = estado.cantadas[estado.cantadas.length - 1];
       const carta = CARTAS.find((c) => c.id === id);
       if (carta) hablar(carta.nombre);
@@ -119,13 +121,21 @@ export function useGame() {
     if (estado.cola.length === 0) return;
     detenerVoz();
     if (estado.cantadas.length === 0) {
-      dispatch({ type: 'SACAR' });
+      hablar('¡Corre y se va con…', {
+        alTerminar: () => {
+          dispatch({ type: 'SACAR' });
+          setJugando(true);
+        },
+      });
+    } else {
+      sonidoReanudar();
+      setJugando(true);
     }
-    setJugando(true);
   }, [estado.cola.length, estado.cantadas.length]);
 
   const pausar = useCallback(() => {
     detenerVoz();
+    sonidoPausa();
     setJugando(false);
   }, []);
 
@@ -136,6 +146,7 @@ export function useGame() {
 
   const barajear = useCallback(() => {
     detenerVoz();
+    sonidoBarajar();
     setJugando(false);
     dispatch({ type: 'NUEVA_PARTIDA' });
     limpiarPartida();
