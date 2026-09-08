@@ -11,16 +11,11 @@ interface Props {
 
 export default function ControlVelocidad({ indice, onChange }: Props) {
   const [valor, setValor] = useState(indice);
+  const [arrastrando, setArrastrando] = useState(false);
 
   useEffect(() => {
-    setValor(indice);
-  }, [indice]);
-
-  const manejarCambio = (v: number) => {
-    const entero = Math.round(v);
-    setValor(entero);
-    onChange(entero);
-  };
+    if (!arrastrando) setValor(indice);
+  }, [indice, arrastrando]);
 
   return (
     <View style={styles.contenedor}>
@@ -30,7 +25,14 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
         maximumValue={VELOCIDADES.length - 1}
         step={1}
         value={valor}
-        onValueChange={manejarCambio}
+        onSlidingStart={() => setArrastrando(true)}
+        onValueChange={(v) => setValor(Math.round(v))}
+        onSlidingComplete={(v) => {
+          const entero = Math.round(v);
+          setValor(entero);
+          setArrastrando(false);
+          onChange(entero);
+        }}
         minimumTrackTintColor={colores.rojo}
         maximumTrackTintColor={colores.grisClaro}
         thumbTintColor={colores.verde}
@@ -40,7 +42,7 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
           <Text
             key={v.clave}
             style={[styles.marca, i === valor && styles.marcaActiva]}
-            onPress={() => manejarCambio(i)}
+            onPress={() => onChange(i)}
           >
             {v.etiqueta}
           </Text>

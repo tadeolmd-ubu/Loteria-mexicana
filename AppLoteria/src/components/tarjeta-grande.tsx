@@ -30,11 +30,11 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
     return (
       <View style={styles.contenedor}>
         <View style={[styles.vacio, { width: tamano, height: tamano }]}>
-          <Text style={styles.emojiVacio}>🃏</Text>
-          <Text style={styles.textoVacio}>¡Lotería!</Text>
-          <Text style={styles.subVacio}>
-            Pulsa «Siguiente carta»{'\n'}para comenzar a cantar.
-          </Text>
+          <Image
+            source={require('../../assets/images/primer-carta.png')}
+            style={styles.imagen}
+            resizeMode="contain"
+          />
         </View>
         <Text style={styles.posicion}>0 de {total} cartas</Text>
       </View>
@@ -76,22 +76,6 @@ const styles = StyleSheet.create({
   vacio: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  emojiVacio: {
-    fontSize: 46,
-  },
-  textoVacio: {
-    color: colores.verde,
-    fontSize: 22,
-    fontWeight: '800',
-    marginTop: 8,
-  },
-  subVacio: {
-    color: colores.grisOscuro,
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 6,
-    lineHeight: 17,
   },
   nombreCaja: {
     marginTop: 12,
