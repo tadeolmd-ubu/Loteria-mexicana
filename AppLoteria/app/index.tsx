@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ControlVelocidad from '@/src/components/control-velocidad';
 import Historial from '@/src/components/historial';
@@ -20,6 +20,13 @@ export default function PantallaJuego() {
 
   const terminadas = juego.restantes === 0;
 
+  const confirmarBarajear = () => {
+    Alert.alert('¿Barajear?', 'Empieza una partida nueva y se borra el historial.', [
+      { text: 'No', style: 'cancel' },
+      { text: 'Sí', style: 'destructive', onPress: juego.barajear },
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.fondo} edges={['top', 'bottom']}>
       <ScrollView contentContainerStyle={styles.contenido} showsVerticalScrollIndicator={false}>
@@ -27,6 +34,8 @@ export default function PantallaJuego() {
           <Text style={styles.titulo}>LOTERÍA</Text>
           <Text style={styles.subtitulo}>Cantador mexicano</Text>
         </View>
+
+        <Historial historial={juego.historial} restantes={juego.restantes} />
 
         <TarjetaGrande carta={juego.cartaActual} total={juego.total} cantadas={juego.cantadas} />
 
@@ -55,7 +64,7 @@ export default function PantallaJuego() {
             >
               <Text style={styles.botonSecundarioTexto}>Siguiente +</Text>
             </Pressable>
-            <Pressable style={styles.botonSecundario} onPress={juego.barajear}>
+            <Pressable style={styles.botonSecundario} onPress={confirmarBarajear}>
               <Text style={styles.botonSecundarioTexto}>♻  Barajear</Text>
             </Pressable>
           </View>
@@ -68,8 +77,6 @@ export default function PantallaJuego() {
             <Text style={styles.finTexto}>¡Se cantaron las 54 cartas!</Text>
           </View>
         )}
-
-        <Historial historial={juego.historial} restantes={juego.restantes} />
       </ScrollView>
     </SafeAreaView>
   );

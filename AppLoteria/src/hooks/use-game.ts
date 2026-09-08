@@ -118,9 +118,11 @@ export function useGame() {
   const iniciar = useCallback(() => {
     if (estado.cola.length === 0) return;
     detenerVoz();
-    dispatch({ type: 'SACAR' });
+    if (estado.cantadas.length === 0) {
+      dispatch({ type: 'SACAR' });
+    }
     setJugando(true);
-  }, [estado.cola.length]);
+  }, [estado.cola.length, estado.cantadas.length]);
 
   const pausar = useCallback(() => {
     detenerVoz();

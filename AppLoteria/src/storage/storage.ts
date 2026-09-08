@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const CLAVE_PARTIDA = 'loteria:partida:v1';
+export const CLAVE_PARTIDA = 'loteria:partida:v2';
 
 export interface PartidaGuardada {
   cola: string[];

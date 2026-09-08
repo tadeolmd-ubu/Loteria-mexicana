@@ -4,7 +4,7 @@ Fuente de la app Lotería Mexicana (cantador de las 54 cartas, 100 % offline).
 
 - **Instalación en el teléfono**: ver [`INSTALAR.md`](../INSTALAR.md) (raíz del repo).
 - **Documentación completa**: ver [`README.md`](../README.md) (raíz del repo).
-- **APK listo**: [`Loteria-Mexicana-v1.0.0.apk`](../Loteria-Mexicana-v1.0.0.apk).
+- **APK listo**: [`Loteria-Mexicana-v1.1.0.apk`](../Loteria-Mexicana-v1.1.0.apk).
 
 ## Comandos rápidos
 
