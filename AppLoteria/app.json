@@ -2,7 +2,7 @@
   "expo": {
     "name": "Lotería Mexicana",
     "slug": "loteria-mexicana",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "loteria",
@@ -13,7 +13,7 @@
     ],
     "android": {
       "package": "com.loteria.mexicana",
-      "versionCode": 5,
+      "versionCode": 6,
       "allowBackup": true,
       "adaptiveIcon": {
         "backgroundColor": "#0B3D2E",
@@ -33,12 +33,6 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#0B3D2E"
-        }
-      ],
-      [
-        "expo-audio",
-        {
-          "recordAudioAndroid": false
         }
       ]
     ],

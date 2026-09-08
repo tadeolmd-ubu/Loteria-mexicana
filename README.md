@@ -30,7 +30,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.2.2.apk`](./Loteria-Mexicana-v1.2.2.apk) (Android 7.0+, ~77 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.2.3.apk`](./Loteria-Mexicana-v1.2.3.apk) (Android 7.0+, ~71 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo
