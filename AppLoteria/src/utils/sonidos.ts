@@ -1,10 +1,12 @@
-import { AudioPlayer, createAudioPlayer } from 'expo-audio';
+/* eslint-disable @typescript-eslint/no-require-imports */
+import type { AudioPlayer } from 'expo-audio';
 
 type NombreSonido = 'carta' | 'pausa' | 'reanudar' | 'barajar';
 
-// Creación perezosa: los reproductores se crean justo antes de usarlos (y nunca
-// durante la evaluación inicial del bundle, para no provocar un crash en el
-// arranque de la app en release).
+// IMPORTANTE: nunca se importa expo-audio de forma estática. Ese paquete
+// resuelve su módulo nativo en el momento del "import" (aunque no se use),
+// lo que provoca un crash al arrancar la app en release si falla el módulo.
+// Por eso expo-audio se carga bajo demanda, dentro de try/catch.
 const fuentes: Record<NombreSonido, number> = {
   carta: require('../../assets/sonidos/carta.wav'),
   pausa: require('../../assets/sonidos/pausa.wav'),
@@ -19,19 +21,23 @@ function obtener(nombre: NombreSonido): AudioPlayer | null {
   const existente = jugadores.get(nombre);
   if (existente) return existente;
   if (fallidos.has(nombre)) return null;
+
+  let mod: typeof import('expo-audio');
+  let jugador: AudioPlayer;
   try {
-    const jugador = createAudioPlayer(fuentes[nombre]);
-    try {
-      jugador.volume = 0.9;
-    } catch {
-      // el volumen es opcional; no debe interrumpir el juego
-    }
-    jugadores.set(nombre, jugador);
-    return jugador;
+    mod = require('expo-audio');
+    jugador = mod.createAudioPlayer(fuentes[nombre]);
   } catch {
     fallidos.add(nombre);
     return null;
   }
+  try {
+    jugador.volume = 0.9;
+  } catch {
+    // el volumen es opcional; no debe interrumpir el juego
+  }
+  jugadores.set(nombre, jugador);
+  return jugador;
 }
 
 function reproducir(nombre: NombreSonido): void {

@@ -15,7 +15,7 @@
 El archivo a instalar es:
 
 ```
-Loteria-Mexicana-v1.2.1.apk
+Loteria-Mexicana-v1.2.2.apk
 ```
 
 Puedes pasarlo de cualquiera de estas formas:
