@@ -18,10 +18,10 @@ export default function PantallaJuego() {
       50 + // 5 gaps de 10
       40 + // cabecera
       92 + // carrusel
+      58 + // botones grandes (deshacer / reiniciar)
       40 + // velocidad
-      50 + // botón flotante
-      38 + // fila de acciones
-      72 + // placa del nombre + posición bajo la carta
+      50 + // fila inferior (FAB + auto)
+      76 + // placa del nombre + posición bajo la carta
       (juego.restantes === 0 ? 44 : 0); // gap + banner de fin
     const disponible = alto - fijos;
     return Math.max(150, Math.min(Math.floor(disponible), width - 46));
@@ -86,32 +86,34 @@ export default function PantallaJuego() {
           />
         </View>
 
-        <ControlVelocidad indice={juego.indiceVelocidad} onChange={juego.setVelocidad} />
-
-        <Pressable
-          style={[styles.botonFlotante, juego.restantes === 0 && styles.botonOpaco]}
-          onPress={manejarSiguiente}
-          disabled={juego.restantes === 0}
-        >
-          <Text style={styles.botonFlotanteTexto}>Siguiente carta  →</Text>
-        </Pressable>
-
-        <View style={styles.filaAcciones}>
+        <View style={styles.filaBotonesGrandes}>
           <Pressable
-            style={[styles.botonAccion, styles.botonAccionAuto, juego.restantes === 0 && !juego.jugando && styles.botonOpaco]}
-            onPress={controlAuto.onPress}
-          >
-            <Text style={styles.botonAccionTexto}>{controlAuto.texto}</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.botonAccion, juego.cantadas === 0 && styles.botonOpaco]}
+            style={[styles.botonGrande, juego.cantadas === 0 && styles.botonOpaco]}
             onPress={juego.deshacer}
             disabled={juego.cantadas === 0}
           >
-            <Text style={styles.botonAccionTexto}>↶  Deshacer</Text>
+            <Text style={styles.botonGrandeTexto}>↶  Deshacer</Text>
           </Pressable>
-          <Pressable style={styles.botonAccion} onPress={confirmarReiniciar}>
-            <Text style={styles.botonAccionTexto}>↻  Reiniciar</Text>
+          <Pressable style={styles.botonGrande} onPress={confirmarReiniciar}>
+            <Text style={styles.botonGrandeTexto}>↻  Reiniciar</Text>
+          </Pressable>
+        </View>
+
+        <ControlVelocidad indice={juego.indiceVelocidad} onChange={juego.setVelocidad} />
+
+        <View style={styles.filaInferior}>
+          <Pressable
+            style={[styles.botonAuto, juego.restantes === 0 && !juego.jugando && styles.botonOpaco]}
+            onPress={controlAuto.onPress}
+          >
+            <Text style={styles.botonAutoTexto}>{controlAuto.texto}</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.botonFlotante, juego.restantes === 0 && styles.botonOpaco]}
+            onPress={manejarSiguiente}
+            disabled={juego.restantes === 0}
+          >
+            <Text style={styles.botonFlotanteTexto}>Siguiente carta  →</Text>
           </Pressable>
         </View>
 
@@ -184,11 +186,54 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  filaBotonesGrandes: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  botonGrande: {
+    flex: 1,
+    backgroundColor: colores.tarjetaFondo,
+    borderRadius: 18,
+    paddingVertical: 14,
+    borderWidth: 2,
+    borderColor: colores.verdeClaro,
+    alignItems: 'center',
+  },
+  botonGrandeTexto: {
+    color: colores.verde,
+    fontSize: 17,
+    fontWeight: '900',
+  },
+  botonOpaco: {
+    opacity: 0.45,
+  },
+  filaInferior: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'stretch',
+  },
+  botonAuto: {
+    flex: 1,
+    backgroundColor: colores.verde,
+    borderRadius: 26,
+    paddingVertical: 13,
+    borderWidth: 3,
+    borderColor: colores.amarillo,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  botonAutoTexto: {
+    color: colores.textoClaro,
+    fontSize: 15,
+    fontWeight: '900',
+  },
   botonFlotante: {
+    flex: 2.2,
     backgroundColor: colores.rojo,
     borderRadius: 26,
     paddingVertical: 13,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 3,
     borderColor: colores.amarillo,
     shadowColor: '#000',
@@ -202,31 +247,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '900',
     letterSpacing: 0.4,
-  },
-  botonOpaco: {
-    opacity: 0.45,
-  },
-  filaAcciones: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  botonAccion: {
-    flex: 1,
-    backgroundColor: colores.tarjetaFondo,
-    borderRadius: 16,
-    paddingVertical: 9,
-    borderWidth: 2,
-    borderColor: colores.verdeClaro,
-    alignItems: 'center',
-  },
-  botonAccionAuto: {
-    backgroundColor: colores.verde,
-    borderColor: colores.verde,
-  },
-  botonAccionTexto: {
-    color: colores.verde,
-    fontSize: 13,
-    fontWeight: '800',
   },
   finBanner: {
     backgroundColor: colores.verde,

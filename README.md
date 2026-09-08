@@ -11,6 +11,8 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 - **54 cartas clásicas** (El Gallo, El Diablito, La Dama, el Catrín…) con las
   **imágenes tradicionales** de la baraja (arte clásico de dominio público).
+- **Deshacer/Reniciar**: botones grandes justo bajo el nombre de la carta; al deshacer el juego
+  vuelve al modo automático y sigue cantando las cartas que faltan.
 - **Interfaz Material 3**: fondo crema, acentos rojo óxido, verde botella y dorado;
   carrusel de cartas cantadas, carta actual grande centrada con animación suave,
   velocidad del narrador con deslizador y botón flotante *Siguiente carta*.
@@ -33,7 +35,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.3.1.apk`](./Loteria-Mexicana-v1.3.1.apk) (Android 7.0+, ~71 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.3.2.apk`](./Loteria-Mexicana-v1.3.2.apk) (Android 7.0+, ~71 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo

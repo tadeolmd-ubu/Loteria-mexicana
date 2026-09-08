@@ -156,8 +156,8 @@ export function useGame() {
 
   const deshacer = useCallback(() => {
     detenerVoz();
-    setJugando(false);
     dispatch({ type: 'DESHACER' });
+    setJugando(true);
   }, []);
 
   const barajear = useCallback(() => {
