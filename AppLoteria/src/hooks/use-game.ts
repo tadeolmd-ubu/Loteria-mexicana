@@ -5,9 +5,12 @@ import { sonidoBarajar, sonidoCarta, sonidoPausa, sonidoReanudar } from '@/src/u
 import { detenerVoz, hablar } from '@/src/utils/voz';
 
 export const VELOCIDADES = [
+  { clave: 'muy_lenta', etiqueta: 'Muy lenta', ms: 8000 },
   { clave: 'lenta', etiqueta: 'Lenta', ms: 6000 },
+  { clave: 'media_lenta', etiqueta: 'Media-lenta', ms: 4600 },
   { clave: 'media', etiqueta: 'Media', ms: 3800 },
-  { clave: 'rapida', etiqueta: 'Rápida', ms: 2200 },
+  { clave: 'rapida', etiqueta: 'Rápida', ms: 2600 },
+  { clave: 'muy_rapida', etiqueta: 'Muy rápida', ms: 1600 },
 ] as const;
 
 export type TipoVelocidad = (typeof VELOCIDADES)[number]['clave'];
@@ -37,7 +40,7 @@ function barajarFisherYates(): string[] {
 const estadoInicial: Estado = {
   cola: [],
   cantadas: [],
-  indiceVelocidad: 1,
+  indiceVelocidad: 3,
 };
 
 function reducer(estado: Estado, accion: Accion): Estado {
@@ -50,7 +53,7 @@ function reducer(estado: Estado, accion: Accion): Estado {
       return { ...estado, cola, cantadas: [...estado.cantadas, siguiente] };
     }
     case 'NUEVA_PARTIDA':
-      return { ...estado, cola: barajarFisherYates(), cantadas: [], indiceVelocidad: 1 };
+      return { ...estado, cola: barajarFisherYates(), cantadas: [], indiceVelocidad: 3 };
     case 'DESHACER': {
       if (estado.cantadas.length === 0) return estado;
       const [ultima] = estado.cantadas.slice(-1);

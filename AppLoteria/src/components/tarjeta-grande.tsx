@@ -29,7 +29,7 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
   if (!carta) {
     return (
       <View style={styles.contenedor}>
-        <View style={[styles.marco, styles.vacio, { width: tamano, height: tamano }]}>
+        <View style={[styles.vacio, { width: tamano, height: tamano }]}>
           <Text style={styles.emojiVacio}>🃏</Text>
           <Text style={styles.textoVacio}>¡Lotería!</Text>
           <Text style={styles.subVacio}>
@@ -45,7 +45,6 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
     <View style={styles.contenedor}>
       <Animated.View
         style={[
-          styles.marco,
           { width: tamano, height: tamano, opacity: opacidad, transform: [{ scale: escala }] },
         ]}
       >
@@ -67,26 +66,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   marco: {
-    borderRadius: 32,
-    backgroundColor: colores.tarjetaFondo,
-    borderWidth: 4,
-    borderColor: colores.bordeCarta,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.16,
-    shadowRadius: 12,
-    elevation: 9,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
   },
   imagen: {
     width: '100%',
     height: '100%',
   },
   vacio: {
-    backgroundColor: colores.crema,
-    borderColor: colores.bordeCarta,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emojiVacio: {
     fontSize: 46,

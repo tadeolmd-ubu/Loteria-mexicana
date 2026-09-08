@@ -22,7 +22,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 - **Frase de inicio**: al comenzar una partida nueva el cantador dice
   *«¡Corre y se va con…!»* y ahí mismo sale la primera carta.
 - **Modo automático**: pulsa *Sacar* y canta las 54 cartas con velocidad ajustable
-  (lenta / media / rápida) mediante un deslizador (el control responde al instante).
+  (muy lenta a muy rápida, 6 niveles) mediante un deslizador (el control responde al instante).
 - **Pausa, avance manual y deshacer**: pausa en cualquier momento, avanza una por una
   con *Siguiente carta* (con voz también) o deshace la última carta cantada.
 - **Barajear**: re-baraja toda la baraja (Fisher-Yates) y comienza una partida nueva.
@@ -35,7 +35,7 @@ alta** usando el texto-a-voz del teléfono. Funciona **100 % sin internet**.
 
 ## Entregable
 
-- **APK firmado**: [`Loteria-Mexicana-v1.3.2.apk`](./Loteria-Mexicana-v1.3.2.apk) (Android 7.0+, ~71 MB).
+- **APK firmado**: [`Loteria-Mexicana-v1.3.3.apk`](./Loteria-Mexicana-v1.3.3.apk) (Android 7.0+, ~71 MB).
 - **Guía de instalación** en español: [`INSTALAR.md`](./INSTALAR.md).
 
 ## Probar en desarrollo

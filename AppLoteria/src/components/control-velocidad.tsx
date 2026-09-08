@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
   marcas: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 14,
+    paddingHorizontal: 4,
   },
   marca: {
     color: colores.textoOscuro,
-    fontSize: 12,
+    fontSize: 11,
     opacity: 0.55,
     fontWeight: '600',
     paddingVertical: 0,
