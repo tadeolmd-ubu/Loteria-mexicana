@@ -23,7 +23,12 @@ export default function BarraProgreso({ ms, activa, clave }: Props) {
   }, [ms, activa, clave, progreso]);
 
   return (
-    <View style={styles.track}>
+    <View
+      style={styles.track}
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Tiempo para la siguiente carta"
+    >
       <Animated.View
         style={[
           styles.llenado,

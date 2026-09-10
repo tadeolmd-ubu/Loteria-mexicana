@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Slider from '@react-native-community/slider';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { VELOCIDADES } from '@/src/hooks/use-game';
 import { colores } from '@/src/theme';
 
@@ -28,19 +28,30 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
         minimumTrackTintColor={colores.rojo}
         maximumTrackTintColor={colores.grisClaro}
         thumbTintColor={colores.verde}
+        accessibilityLabel="Velocidad del canto"
+        accessibilityValue={{ text: VELOCIDADES[activa].etiqueta }}
       />
       <View style={styles.marcas}>
         {VELOCIDADES.map((v, i) => (
-          <Text
+          <Pressable
             key={v.clave}
-            style={[styles.marca, i === activa && styles.marcaActiva]}
+            style={styles.marcaBoton}
             onPress={() => {
               marcar(i);
               onChange(i);
             }}
+            accessibilityRole="button"
+            accessibilityLabel={`Velocidad ${v.etiqueta}`}
+            accessibilityState={{ selected: i === activa }}
           >
-            {v.etiqueta}
-          </Text>
+            <Text
+              style={[styles.marca, i === activa && styles.marcaActiva]}
+              maxFontSizeMultiplier={1.3}
+              numberOfLines={1}
+            >
+              {v.etiqueta}
+            </Text>
+          </Pressable>
         ))}
       </View>
     </View>
@@ -50,7 +61,7 @@ export default function ControlVelocidad({ indice, onChange }: Props) {
 const styles = StyleSheet.create({
   contenedor: {
     width: '100%',
-    maxHeight: 40,
+    height: 48,
   },
   slider: {
     width: '100%',
@@ -59,14 +70,20 @@ const styles = StyleSheet.create({
   marcas: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 4,
+    paddingHorizontal: 0,
+    marginTop: -4,
+  },
+  marcaBoton: {
+    minHeight: 28,
+    minWidth: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   marca: {
     color: colores.textoOscuro,
-    fontSize: 11,
-    opacity: 0.55,
-    fontWeight: '600',
-    paddingVertical: 0,
+    fontSize: 13,
+    opacity: 0.7,
+    fontWeight: '700',
   },
   marcaActiva: {
     opacity: 1,

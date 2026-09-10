@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, Image, StyleSheet, Text, View } from 'react-native';
 import { Carta } from '@/src/data/cartas';
 import { colores } from '@/src/theme';
 
@@ -7,11 +7,10 @@ interface Props {
   carta: Carta | null;
   total: number;
   cantadas: number;
-  tamano?: number;
+  compacta?: boolean;
 }
 
-export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: Props) {
-  const { width: anchoPantalla } = useWindowDimensions();
+export default function TarjetaGrande({ carta, total, cantadas, compacta = false }: Props) {
   const opacidad = useRef(new Animated.Value(1)).current;
   const escala = useRef(new Animated.Value(1)).current;
   const cartaAnterior = useRef<string | null>(carta?.id ?? null);
@@ -28,18 +27,22 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
   }, [carta?.id, opacidad, escala]);
 
   if (!carta) {
-    const anchoVacio = Math.min(tamano * 1.2, anchoPantalla - 24);
-    const altoVacio = Math.round((anchoVacio * 373) / 669);
     return (
       <View style={styles.contenedor}>
-        <View style={[styles.vacio, { width: anchoVacio, height: altoVacio }]}>
+        <View style={styles.areaImagen}>
           <Image
             source={require('../../assets/images/primer-carta.png')}
             style={styles.imagen}
             resizeMode="contain"
           />
         </View>
-        <Text style={styles.posicion}>0 de {total} cartas</Text>
+        <Text
+          style={[styles.posicion, compacta && styles.posicionCompacta]}
+          maxFontSizeMultiplier={1.35}
+          numberOfLines={1}
+        >
+          0 de {total} cartas
+        </Text>
       </View>
     );
   }
@@ -48,15 +51,26 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
     <View style={styles.contenedor}>
       <Animated.View
         style={[
-          { width: tamano, height: tamano, opacity: opacidad, transform: [{ scale: escala }] },
+          styles.areaImagen,
+          { opacity: opacidad, transform: [{ scale: escala }] },
         ]}
       >
         <Image source={carta.imagen} style={styles.imagen} resizeMode="contain" />
       </Animated.View>
-      <View style={styles.nombreCaja}>
-        <Text style={styles.nombre}>{carta.nombre}</Text>
+      <View style={[styles.nombreCaja, compacta && styles.nombreCajaCompacta]}>
+        <Text
+          style={[styles.nombre, compacta && styles.nombreCompacto]}
+          maxFontSizeMultiplier={1.35}
+          numberOfLines={2}
+        >
+          {carta.nombre}
+        </Text>
       </View>
-      <Text style={styles.posicion}>
+      <Text
+        style={[styles.posicion, compacta && styles.posicionCompacta]}
+        maxFontSizeMultiplier={1.35}
+        numberOfLines={1}
+      >
         Carta {cantadas} de {total}
       </Text>
     </View>
@@ -65,42 +79,61 @@ export default function TarjetaGrande({ carta, total, cantadas, tamano = 300 }: 
 
 const styles = StyleSheet.create({
   contenedor: {
+    flex: 1,
     alignItems: 'center',
     width: '100%',
+    minHeight: 0,
   },
-  marco: {
+  areaImagen: {
+    flex: 1,
+    width: '100%',
+    minHeight: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 5,
+    borderWidth: 3,
+    borderColor: colores.bordeCarta,
+    borderRadius: 18,
+    backgroundColor: '#FFF9E9',
+    overflow: 'hidden',
   },
   imagen: {
     width: '100%',
     height: '100%',
   },
-  vacio: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   nombreCaja: {
-    marginTop: 12,
+    marginTop: 8,
     backgroundColor: colores.rojo,
     borderRadius: 13,
     paddingHorizontal: 22,
-    paddingVertical: 7,
+    paddingVertical: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.22,
     shadowRadius: 5,
     elevation: 5,
   },
+  nombreCajaCompacta: {
+    marginTop: 4,
+    paddingHorizontal: 18,
+    paddingVertical: 3,
+  },
   nombre: {
     color: colores.textoClaro,
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '800',
     textAlign: 'center',
   },
+  nombreCompacto: {
+    fontSize: 19,
+  },
   posicion: {
-    marginTop: 7,
+    marginTop: 4,
     color: colores.grisOscuro,
     fontSize: 12,
+  },
+  posicionCompacta: {
+    marginTop: 2,
+    fontSize: 11,
   },
 });

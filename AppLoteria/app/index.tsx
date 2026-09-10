@@ -1,5 +1,5 @@
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BarraProgreso from '@/src/components/barra-progreso';
 import ControlVelocidad from '@/src/components/control-velocidad';
 import Historial from '@/src/components/historial';
@@ -9,26 +9,9 @@ import { colores } from '@/src/theme';
 
 export default function PantallaJuego() {
   const juego = useGame();
-  const { width, height } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-
-  const accordarCarta = (() => {
-    const alto = height - insets.top - insets.bottom;
-    const fijos =
-      12 + // padding vertical
-      70 + // 7 gaps de 10
-      40 + // cabecera
-      92 + // carrusel
-      52 + // botón pausa (grande)
-      52 + // botón siguiente carta (grande)
-      10 + // barra de progreso
-      40 + // velocidad
-      58 + // botones retroceder / reiniciar
-      76 + // placa del nombre + posición bajo la carta
-      (juego.restantes === 0 ? 44 : 0); // gap + banner de fin
-    const disponible = alto - fijos;
-    return Math.max(150, Math.min(Math.floor(disponible), width - 46));
-  })();
+  const { height, fontScale } = useWindowDimensions();
+  const compacta = height < 760 || fontScale > 1.15;
+  const muyCompacta = height < 650 || fontScale > 1.6;
 
   if (!juego.cargado) {
     return (
@@ -63,15 +46,33 @@ export default function PantallaJuego() {
 
   return (
     <SafeAreaView style={styles.fondo} edges={['top', 'bottom']}>
-      <View style={styles.contenido}>
-        <View style={styles.cabecera}>
+      <View pointerEvents="none" style={styles.frisoIzquierdo} />
+      <View pointerEvents="none" style={styles.frisoDerecho} />
+      <View
+        style={[
+          styles.contenido,
+          compacta && styles.contenidoCompacto,
+          muyCompacta && styles.contenidoMuyCompacto,
+        ]}
+      >
+        <View style={[styles.cabecera, muyCompacta && styles.cabeceraMuyCompacta]}>
           <View style={styles.cabeceraCaja}>
-            <Text style={styles.kicker}>L O T E R Í A   M E X I C A N A</Text>
-            <Text style={styles.titulo}>Contador de Lotería</Text>
+            {!muyCompacta && (
+              <Text style={styles.kicker} maxFontSizeMultiplier={1.2} numberOfLines={1}>
+                BARAJA TRADICIONAL
+              </Text>
+            )}
+            <Text
+              style={[styles.titulo, compacta && styles.tituloCompacto]}
+              maxFontSizeMultiplier={1.25}
+              numberOfLines={1}
+            >
+              Lotería Mexicana
+            </Text>
           </View>
           <View style={styles.chipRestantes}>
-            <Text style={styles.chipTexto}>
-              {juego.restantes} {juego.restantes === 1 ? 'carta' : 'cartas'}
+            <Text style={styles.chipTexto} maxFontSizeMultiplier={1.25} numberOfLines={1}>
+              {juego.restantes} restantes
             </Text>
           </View>
         </View>
@@ -83,23 +84,41 @@ export default function PantallaJuego() {
             carta={juego.cartaActual}
             total={juego.total}
             cantadas={juego.cantadas}
-            tamano={accordarCarta}
+            compacta={compacta}
           />
         </View>
 
         <Pressable
-          style={[styles.botonPausa, juego.restantes === 0 && !juego.jugando && styles.botonOpaco]}
+          style={({ pressed }) => [
+            styles.botonPausa,
+            pressed && styles.botonPresionado,
+            juego.restantes === 0 && !juego.jugando && styles.botonOpaco,
+          ]}
           onPress={controlAuto.onPress}
+          accessibilityRole="button"
+          accessibilityLabel={controlAuto.texto.replace(/[▶⏸]/gu, '').trim()}
+          accessibilityState={{ disabled: juego.restantes === 0 && !juego.jugando }}
         >
-          <Text style={styles.botonPausaTexto}>{controlAuto.texto}</Text>
+          <Text style={styles.botonPausaTexto} maxFontSizeMultiplier={1.3} numberOfLines={1}>
+            {controlAuto.texto}
+          </Text>
         </Pressable>
 
         <Pressable
-          style={[styles.botonSiguiente, (terminadas || sinEmpezar) && styles.botonOpaco]}
+          style={({ pressed }) => [
+            styles.botonSiguiente,
+            pressed && styles.botonPresionado,
+            (terminadas || sinEmpezar) && styles.botonOpaco,
+          ]}
           onPress={manejarSiguiente}
           disabled={terminadas || sinEmpezar}
+          accessibilityRole="button"
+          accessibilityLabel="Siguiente carta"
+          accessibilityState={{ disabled: terminadas || sinEmpezar }}
         >
-          <Text style={styles.botonSiguienteTexto}>Siguiente carta  →</Text>
+          <Text style={styles.botonSiguienteTexto} maxFontSizeMultiplier={1.3} numberOfLines={1}>
+            Siguiente carta  →
+          </Text>
         </Pressable>
 
         <BarraProgreso
@@ -112,20 +131,41 @@ export default function PantallaJuego() {
 
         <View style={styles.filaAcciones}>
           <Pressable
-            style={[styles.botonGrande, juego.cantadas === 0 && styles.botonOpaco]}
+            style={({ pressed }) => [
+              styles.botonGrande,
+              pressed && styles.botonSecundarioPresionado,
+              juego.cantadas === 0 && styles.botonOpaco,
+            ]}
             onPress={juego.deshacer}
             disabled={juego.cantadas === 0}
+            accessibilityRole="button"
+            accessibilityLabel="Retroceder una carta"
+            accessibilityState={{ disabled: juego.cantadas === 0 }}
           >
-            <Text style={styles.botonGrandeTexto}>↶  Retroceder</Text>
+            <Text style={styles.botonGrandeTexto} maxFontSizeMultiplier={1.2} numberOfLines={1}>
+              ↶  Retroceder
+            </Text>
           </Pressable>
-          <Pressable style={styles.botonGrande} onPress={confirmarReiniciar}>
-            <Text style={styles.botonGrandeTexto}>↻  Reiniciar</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.botonGrande,
+              pressed && styles.botonSecundarioPresionado,
+            ]}
+            onPress={confirmarReiniciar}
+            accessibilityRole="button"
+            accessibilityLabel="Reiniciar la partida"
+          >
+            <Text style={styles.botonGrandeTexto} maxFontSizeMultiplier={1.2} numberOfLines={1}>
+              ↻  Reiniciar
+            </Text>
           </Pressable>
         </View>
 
         {terminadas && (
           <View style={styles.finBanner}>
-            <Text style={styles.finTexto}>¡Se cantaron las 54 cartas!</Text>
+            <Text style={styles.finTexto} maxFontSizeMultiplier={1.25} numberOfLines={1}>
+              ¡Se cantaron las 54 cartas!
+            </Text>
           </View>
         )}
       </View>
@@ -149,38 +189,83 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colores.fondo,
   },
+  frisoIzquierdo: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 5,
+    backgroundColor: colores.verde,
+    borderRightWidth: 2,
+    borderRightColor: colores.bordeCarta,
+  },
+  frisoDerecho: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: 5,
+    backgroundColor: colores.rojo,
+    borderLeftWidth: 2,
+    borderLeftColor: colores.bordeCarta,
+  },
   contenido: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingVertical: 8,
+    gap: 8,
+  },
+  contenidoCompacto: {
     paddingVertical: 6,
-    gap: 10,
+    gap: 6,
+  },
+  contenidoMuyCompacto: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    gap: 4,
   },
   cabecera: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 8,
+    minHeight: 50,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 15,
+    borderBottomWidth: 3,
+    borderBottomColor: colores.bordeCarta,
+    backgroundColor: colores.verde,
+  },
+  cabeceraMuyCompacta: {
+    minHeight: 40,
+    paddingVertical: 3,
   },
   cabeceraCaja: {
     flex: 1,
   },
   kicker: {
-    color: colores.bordeCarta,
+    color: colores.amarillo,
     fontSize: 10,
     fontWeight: '700',
-    letterSpacing: 1.4,
+    letterSpacing: 1.2,
   },
   titulo: {
-    color: colores.verde,
-    fontSize: 22,
+    color: colores.textoClaro,
+    fontSize: 21,
     fontWeight: '900',
     marginTop: 1,
+  },
+  tituloCompacto: {
+    fontSize: 18,
   },
   chipRestantes: {
     backgroundColor: colores.amarillo,
     borderRadius: 16,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: colores.bordeCarta,
   },
   chipTexto: {
     color: colores.rojoFuerte,
@@ -189,16 +274,22 @@ const styles = StyleSheet.create({
   },
   zonaCarta: {
     flex: 1,
+    minHeight: 72,
     alignItems: 'center',
     justifyContent: 'center',
   },
   botonOpaco: {
     opacity: 0.4,
   },
+  botonPresionado: {
+    opacity: 0.82,
+    transform: [{ scale: 0.985 }],
+  },
   botonPausa: {
     backgroundColor: colores.verde,
     borderRadius: 26,
-    paddingVertical: 15,
+    minHeight: 52,
+    paddingVertical: 8,
     borderWidth: 3,
     borderColor: colores.amarillo,
     alignItems: 'center',
@@ -213,7 +304,8 @@ const styles = StyleSheet.create({
   botonSiguiente: {
     backgroundColor: colores.rojo,
     borderRadius: 26,
-    paddingVertical: 15,
+    minHeight: 52,
+    paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 3,
@@ -236,22 +328,27 @@ const styles = StyleSheet.create({
   },
   botonGrande: {
     flex: 1,
+    minHeight: 50,
     backgroundColor: colores.tarjetaFondo,
     borderRadius: 18,
-    paddingVertical: 14,
+    paddingVertical: 7,
     borderWidth: 2,
     borderColor: colores.verdeClaro,
     alignItems: 'center',
   },
   botonGrandeTexto: {
     color: colores.verde,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '900',
+  },
+  botonSecundarioPresionado: {
+    backgroundColor: colores.fondoSuave,
   },
   finBanner: {
     backgroundColor: colores.verde,
     borderRadius: 12,
-    paddingVertical: 8,
+    minHeight: 34,
+    paddingVertical: 5,
     alignItems: 'center',
   },
   finTexto: {

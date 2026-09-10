@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Carta } from '@/src/data/cartas';
 import { colores } from '@/src/theme';
 
@@ -10,6 +10,8 @@ interface Props {
 
 export default function Historial({ historial, restantes }: Props) {
   const scrollRef = useRef<ScrollView>(null);
+  const { height, fontScale } = useWindowDimensions();
+  const compacta = height < 760 || fontScale > 1.15;
 
   useEffect(() => {
     if (historial.length > 0) {
@@ -19,35 +21,45 @@ export default function Historial({ historial, restantes }: Props) {
   }, [historial.length]);
 
   return (
-    <View style={styles.contenedor}>
+    <View style={[styles.contenedor, compacta && styles.contenedorCompacto]}>
       <View style={styles.encabezado}>
-        <Text style={styles.titulo}>Cantadas</Text>
+        <Text style={styles.titulo} maxFontSizeMultiplier={1.35} numberOfLines={1}>
+          Cartas cantadas
+        </Text>
         <View style={styles.contadorCaja}>
-          <Text style={styles.contador}>{historial.length}</Text>
+          <Text style={styles.contador} maxFontSizeMultiplier={1.25} numberOfLines={1}>
+            {historial.length}
+          </Text>
         </View>
       </View>
       {historial.length === 0 ? (
-        <Text style={styles.vacio}>
-          {restantes === 54
-            ? 'Todavía no se ha cantado ninguna carta.'
-            : 'Ninguna carta por ahora.'}
+        <Text style={styles.vacio} maxFontSizeMultiplier={1.35} numberOfLines={2}>
+          {restantes === 54 ? 'Aún no hay cartas cantadas.' : 'Ninguna carta por ahora.'}
         </Text>
       ) : (
         <ScrollView
           ref={scrollRef}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.fila}
+          contentContainerStyle={[styles.fila, compacta && styles.filaCompacta]}
+          accessibilityLabel={`Historial: ${historial.length} cartas cantadas`}
         >
           {historial.map((carta, i) => (
-            <View key={carta.id} style={styles.miniaturaCaja}>
+            <View
+              key={carta.id}
+              style={[styles.miniaturaCaja, compacta && styles.miniaturaCajaCompacta]}
+              accessible
+              accessibilityLabel={`Carta ${i + 1}: ${carta.nombre}`}
+            >
               <Image
                 source={carta.imagen}
                 style={styles.miniatura}
                 resizeMode="contain"
               />
               <View style={styles.numBadge}>
-                <Text style={styles.miniaturaNum}>{i + 1}</Text>
+                <Text style={styles.miniaturaNum} maxFontSizeMultiplier={1.15}>
+                  {i + 1}
+                </Text>
               </View>
             </View>
           ))}
@@ -60,7 +72,15 @@ export default function Historial({ historial, restantes }: Props) {
 const styles = StyleSheet.create({
   contenedor: {
     width: '100%',
-    maxHeight: 92,
+    height: 88,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: colores.amarillo,
+    borderRadius: 12,
+    backgroundColor: '#FFF9E9',
+  },
+  contenedorCompacto: {
+    height: 70,
   },
   encabezado: {
     flexDirection: 'row',
@@ -99,9 +119,12 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingBottom: 2,
   },
+  filaCompacta: {
+    gap: 7,
+  },
   miniaturaCaja: {
-    width: 58,
-    height: 62,
+    width: 52,
+    height: 52,
     borderRadius: 14,
     backgroundColor: colores.tarjetaFondo,
     borderWidth: 2,
@@ -112,6 +135,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+  },
+  miniaturaCajaCompacta: {
+    width: 46,
+    height: 40,
+    borderRadius: 9,
   },
   miniatura: {
     width: '100%',
